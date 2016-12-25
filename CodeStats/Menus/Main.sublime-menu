@@ -1,0 +1,31 @@
+[
+  {
+    "id": "preferences",
+    "children": [
+      {
+        "id": "package-settings",
+        "children": [
+          {
+            "caption": "CodeStats",
+            "children": [
+              {
+                "caption": "Settings – Default",
+                "command": "open_file",
+                "args": {
+                  "file": "${packages}/CodeStats/Settings/CodeStats.sublime-settings"
+                }
+              },
+              {
+                "caption": "Settings – User",
+                "command": "open_file",
+                "args": {
+                  "file": "${packages}/User/CodeStats.sublime-settings"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
