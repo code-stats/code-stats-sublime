@@ -4,7 +4,7 @@ import os
 import shutil
 import datetime
 import json
-from . import requests
+import requests
 
 
 # Pulses will be sent after intervals of this many seconds
