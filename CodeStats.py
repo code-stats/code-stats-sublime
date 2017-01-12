@@ -15,7 +15,7 @@ DEFAULT_URL = 'https://codestats.net/api/my/pulses'
 
 
 def log(*msg):
-    print('code-stats-sublime: ', *msg)
+    print('code-stats-sublime:', *msg)
 
 
 def show_first_time_setup():
@@ -73,7 +73,7 @@ def send_pulses():
 
         except requests.exceptions.RequestException as e:
             failed = True
-            log('Pulse failed with exception', e)
+            log('Pulse failed with exception', str(e))
             window.status_message('C::S error: ' + str(e))
 
         if failed:
@@ -146,11 +146,9 @@ class Timer:
     def __init__(self, fun):
         self.fun = fun
         self.set_timeout()
-        log('Timer started.')
 
     def run(self):
         self.fun()
-        log('Timer removed.')
 
     def set_timeout(self):
         sublime.set_timeout_async(lambda: self.run(), PULSE_TIMEOUT * 1000)
@@ -215,6 +213,11 @@ class ChangeListener(sublime_plugin.EventListener):
         if not Config.has_init():
             return
 
+        # Prevent XP from other views than editor view (widgets are builtin stuff
+        # like menus, find dialogs, etc.)
+        if view.settings().get('is_widget'):
+            return
+
         # Start timer if not already started
         if self.timer is None:
             self.timer = Timer(lambda: self.timer_run())
@@ -224,7 +227,6 @@ class ChangeListener(sublime_plugin.EventListener):
         language = os.path.splitext(syntax_file)[0]
 
         pulse.add_xp(language, 1)
-        log(pulse)
 
 
 def plugin_loaded():
