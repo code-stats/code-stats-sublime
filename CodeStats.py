@@ -27,17 +27,8 @@ def show_first_time_setup():
     if not os.path.isfile(user_settings_file):
         sublime.run_command('edit_settings', {
             'base_file': '${packages}/CodeStats/Settings/CodeStats.sublime-settings',
-            'default': """{
-  // Thanks for installing CodeStats!
-
-  // To set up:
-  // Get your API key from your machines page: https://codestats.net/my/machines
-  // and insert it below, then just save the settings file.
-  "API_KEY": "",
-
-  // Only change this if you know what you are doing
-  "API_URL": "https://codestats.net/api/my/pulses/"
-}"""
+            'default': """// Put your custom settings here, check the default settings file for keys.
+{}"""
         })
 
 

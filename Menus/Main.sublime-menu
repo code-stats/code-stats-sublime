@@ -10,7 +10,7 @@
             "command": "edit_settings",
             "args": {
               "base_file": "${packages}/CodeStats/Settings/CodeStats.sublime-settings",
-              "default": "{\n// Get your API key from your machines page: https://codestats.net/my/machines\n\"API_KEY\": \"\",\n\n// Only change this if you know what you are doing\n\"API_URL\": \"https://codestats.net/api/my/pulses/\"\n}"
+              "default": "// Put your custom settings here, check the default settings file for keys.\n{}"
             }
           }
         ]
