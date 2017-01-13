@@ -20,23 +20,25 @@ def log(*msg):
 
 def show_first_time_setup():
     """
-    Show first time setup if it hasn't been shown yet.
+    Show first time setup if user settings file doesn't exist yet.
     """
-    default_settings_file = os.path.join(sublime.packages_path(), 'CodeStats', 'Settings', 'CodeStats.sublime-settings')
     user_settings_file = os.path.join(sublime.packages_path(), 'User', 'CodeStats.sublime-settings')
 
-    if not os.path.isfile(user_settings_file) and os.path.isfile(default_settings_file):
-        shutil.copyfile(default_settings_file, user_settings_file)
+    if not os.path.isfile(user_settings_file):
+        sublime.run_command('edit_settings', {
+            'base_file': '${packages}/CodeStats/Settings/CodeStats.sublime-settings',
+            'default': """{
+  // Thanks for installing CodeStats!
 
-        sublime.message_dialog('''
-Setting up CodeStats:
+  // To set up:
+  // Get your API key from your machines page: https://codestats.net/my/machines
+  // and insert it below, then just save the settings file.
+  "API_KEY": "",
 
-0. Go to your Machines page on https://codestats.net/my/machines and create a new API key.
-1. Insert the API key in the configuration file and save.
-2. Start writing code!
-''')
-        window = sublime.active_window()
-        window.open_file(user_settings_file)
+  // Only change this if you know what you are doing
+  "API_URL": "https://codestats.net/api/my/pulses/"
+}"""
+        })
 
 
 def send_pulses():

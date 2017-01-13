@@ -1,4 +1,10 @@
+// Don't use this settings file for custom settings to avoid them
+// being overwritten when the plugin is updated.
 {
+  // API key from Code::Stats machines page.
   "API_KEY": "",
+
+  // API URL where to send pulses. Should not be changed unless you are
+  // debugging the plugin.
   "API_URL": "https://codestats.net/api/my/pulses/"
 }
