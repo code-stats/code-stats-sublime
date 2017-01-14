@@ -11,33 +11,22 @@ import requests
 PULSE_TIMEOUT = 10
 
 # Default URL for the API
-DEFAULT_URL = 'https://codestats.net/api/my/pulses'
+DEFAULT_URL = 'https://codestats.net/api/my/pulses/'
 
 
 def log(*msg):
     print('code-stats-sublime:', *msg)
 
 
-def show_first_time_setup():
-    """
-    Show first time setup if user settings file doesn't exist yet.
-    """
-    user_settings_file = os.path.join(sublime.packages_path(), 'User', 'CodeStats.sublime-settings')
-
-    if not os.path.isfile(user_settings_file):
-        sublime.run_command('edit_settings', {
-            'base_file': '${packages}/CodeStats/Settings/CodeStats.sublime-settings',
-            'default': """// Put your custom settings here, check the default settings file for keys.
-{}"""
-        })
-
-
 def send_pulses():
-    # If required settings are not defined, don't act
+    window = sublime.active_window()
+
+    # If required settings are not defined, don't act but complain to user
     if not Config.has_required_settings():
+        window.status_message('C::S missing API key! Please add API key in settings.')
+        log('Missing API key, cannot send data! Please add API key in settings.')
         return
 
-    window = sublime.active_window()
     pulses = Pulse.pulses_to_send
 
     if Pulse.current_pulse is not None:
@@ -62,7 +51,7 @@ def send_pulses():
             if r.status_code != 201:
                 failed = True
                 log('Pulse failed with status', r.status_code, 'and content:', r.text)
-                window.status_message('C::S submit failed: {} {}'.format(r.status_code, r.text))
+                window.status_message('C::S submit failed (check API key): {} {}'.format(r.status_code, r.text))
 
         except requests.exceptions.RequestException as e:
             failed = True
@@ -144,7 +133,7 @@ class Timer:
         self.fun()
 
     def set_timeout(self):
-        sublime.set_timeout_async(lambda: self.run(), PULSE_TIMEOUT * 1000)
+        sublime.set_timeout_async(self.run, PULSE_TIMEOUT * 1000)
 
 
 class Pulse:
@@ -213,7 +202,7 @@ class ChangeListener(sublime_plugin.EventListener):
 
         # Start timer if not already started
         if self.timer is None:
-            self.timer = Timer(lambda: self.timer_run())
+            self.timer = Timer(self.timer_run)
 
         pulse = Pulse.get_pulse()
         syntax_file = os.path.basename(view.settings().get('syntax'))
@@ -224,6 +213,3 @@ class ChangeListener(sublime_plugin.EventListener):
 
 def plugin_loaded():
     Config.init()
-
-    if not Config.has_required_settings():
-        show_first_time_setup()
