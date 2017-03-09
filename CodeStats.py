@@ -173,7 +173,7 @@ class Pulse:
 
         return cls.current_pulse
 
-    def __timestamp__():
+    def __timestamp__(self):
         # Get ISO timestamp with local time and offset
         utc_dt = datetime.datetime.now(datetime.timezone.utc)
         loc_dt = utc_dt.astimezone()
