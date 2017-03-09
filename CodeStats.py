@@ -159,7 +159,7 @@ class Pulse:
 
     def __str__(self):
         # Convert pulse into JSON string that can be sent to API
-        ret = {'coded_at': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+        ret = {'coded_at': self.__timestamp__()}
         ret['xps'] = [{'language': l, 'xp': x} for l, x in self.xps.items()]
         return json.dumps(ret)
 
@@ -172,6 +172,12 @@ class Pulse:
             cls.current_pulse = Pulse()
 
         return cls.current_pulse
+
+    def __timestamp__():
+        # Get ISO timestamp with local time and offset
+        utc_dt = datetime.datetime.now(datetime.timezone.utc)
+        loc_dt = utc_dt.astimezone()
+        return loc_dt.replace(microsecond=0).isoformat()
 
 
 class ChangeListener(sublime_plugin.EventListener):
