@@ -44,6 +44,7 @@ def send_pulses():
                 headers={
                     'content-type': 'application/json',
                     'x-api-token': Config.api_key,
+                    'user-agent': 'code-stats-sublime/1.1.0',
                 },
                 data=pulse
             )
@@ -197,13 +198,20 @@ class ChangeListener(sublime_plugin.EventListener):
         self.timer = None
 
     def on_modified_async(self, view):
+        print(view.is_read_only(), view.is_scratch(), view.settings().get('is_widget'))
+
         # If plugin isn't fully loaded yet, don't do anything
         if not Config.has_init():
             return
 
-        # Prevent XP from other views than editor view (widgets are builtin stuff
-        # like menus, find dialogs, etc.)
-        if view.settings().get('is_widget'):
+        # Prevent XP from other views than editor view
+        #
+        # * If the view is read only, the user is obviously not supposed to type there so any events are non-user
+        # * If the view is a scratch view, err on the side of no XP as these can be stuff like output panels and
+        #   similar too
+        # * If the view is a widget it's like a panel or the console or some other builtin thing where we don't
+        #   want to capture typing
+        if view.is_read_only() or view.is_scratch() or view.settings().get('is_widget'):
             return
 
         # Start timer if not already started
