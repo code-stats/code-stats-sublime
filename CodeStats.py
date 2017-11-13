@@ -198,8 +198,6 @@ class ChangeListener(sublime_plugin.EventListener):
         self.timer = None
 
     def on_modified_async(self, view):
-        print(view.is_read_only(), view.is_scratch(), view.settings().get('is_widget'))
-
         # If plugin isn't fully loaded yet, don't do anything
         if not Config.has_init():
             return
