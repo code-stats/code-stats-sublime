@@ -1,3 +1,8 @@
+## 1.1.1 - Fix XP from output panel
+
+* False XP was given when a project was built and text was printed into the
+  output panel. Now this is not counted anymore.
+
 ## 1.1.0 - Fix XP problems and new repo
 
 * Repo is now on GitLab

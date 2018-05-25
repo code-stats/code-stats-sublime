@@ -209,7 +209,12 @@ class ChangeListener(sublime_plugin.EventListener):
         #   similar too
         # * If the view is a widget it's like a panel or the console or some other builtin thing where we don't
         #   want to capture typing
-        if view.is_read_only() or view.is_scratch() or view.settings().get('is_widget'):
+        # * If the view is not the currently active view of the window, it's not the user that is typing, because
+        #   the user can only type in the active view.
+        if (view.is_read_only() or
+            view.is_scratch() or
+            view.settings().get('is_widget') or
+            view.id() != view.window().active_view().id()):
             return
 
         # Start timer if not already started
